@@ -1,0 +1,343 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+      "description": "<p>Api de demo</p><p>Données simulées</p>",
+      "version": "1.0.0",
+      "title": "Démo documentation API"
+    },
+    "servers": [
+      {
+        "url": "https://demo.server"
+      },
+      {
+        "url": "https://demo2.server"
+      }
+    ],
+    "externalDocs": {
+      "description": "Documentation complète du projet",
+      "url": "https://exemple.com/docs"
+    },
+    "tags": [
+      {
+        "name": "Users",
+        "description": "Tout ce qui concerne les utilisateurs"
+      },
+      {
+        "name": "Articles",
+        "description": "Tout ce qui concerne les articles"
+      }
+    ],
+    "paths": {
+      "/users":{
+        "get":{
+          "tags": ["Users"],
+          "summary": "Obtenir la liste des utilisateurs",
+          "operationId": "getUsers",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/LimitParam"
+            },
+            {
+              "$ref": "#/components/parameters/OffsetParam"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Renvoie une collection d'utilisateurs",
+              "content":{
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ArrayOfUtilisateurs"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Utilisateurs non trouvé",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "tags": ["Users"],
+          "summary": "créer un nouvel utilisateur",
+          "operationId": "createUser",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema":{
+                  "$ref": "#/components/schemas/UtilisateurPost"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Utilisateur crée avec succès"
+            },
+            "400": {
+              "description": "Données invalides"
+            }
+          }     
+        }
+      },
+      "/users/{id}": {
+        "get": {
+          "tags": ["Users"],
+          "summary": "Obtenir un utilisateur par ID",
+          "operationId": "getUserById",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "description": "Id de l'utilisateur à récupérer"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Détails de l'utilisateur",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref":"#/components/schemas/UtilisateurGet"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description":"Utilisateur non trouvé"
+            } 
+          }
+        },
+        "put": {
+          "tags": ["Users"],
+          "summary": "Mettre à jour un utilisateur existant",
+          "operationId": "updateUser",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "description": "Id de l'utilisateur à récupérer"
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UtilisateurPut"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Utilisateur est à jour avec succès"
+            },
+            "400": {
+              "description": "Requête invalide"
+            },
+            "404": {
+              "description": "Utilisateur non trouvé"
+            }
+          }
+        },
+        "delete": {
+          "tags": ["Users"],
+          "summary": "Supprimer un utilisateur existant",
+          "operationId": "deleteUser",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "description": "Id de l'utilisateur à récupérer"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Utilisateur supprimé avec succès"
+            },
+            "404": {
+              "description": "Utilisateur non trouvé"
+            }
+          }
+        }
+      },
+      "/articles" : {
+        "get": {
+            "tags": ["Articles"],
+            "summary": "Obtenir les articles",
+            "operationId": "getArticles"
+        },
+        "post": {
+            "tags": ["Articles"],
+            "summary": "Crée un nouveau articles",
+            "operationId": "createArticles"
+        }
+      },
+      "/articles/{id}" : {
+        "get": {
+            "tags": ["Articles"],
+            "summary": "Obtenir un article par ID"
+        },
+        "put": {
+            "tags": ["Articles"],
+            "summary": "Mettre à jour un article existant"
+        },
+        "delete": {
+            "tags": ["Articles"],
+            "summary": "Supprimer un article existant"
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "Utilisateur": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "example": 1
+            },
+            "username": {
+              "type": "string",
+              "example": "Mike"
+            },
+            "email": {
+              "type": "string",
+              "format": "email",
+              "example": "mike@example.com"
+            }
+          }
+        },
+        "ArrayOfUtilisateurs":{
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/Utilisateur"
+          },
+          "example": [
+            {
+              "id": 1,
+              "username": "Toto",
+              "email": "toto@example.com"
+            },
+            {
+              "id": 2,
+              "username": "Tata",
+              "email": "tata@example.com"
+            }
+          ]
+        },
+        "UtilisateurGet" : {
+          "type": "object",
+          "items": {
+            "$ref": "#/components/schemas/Utilisateur"
+          },
+          "properties": {
+            "id": {
+              "type": "integer",
+              "example": 1
+            },
+            "username": {
+              "type": "string",
+              "example": "Tutu"
+            },
+            "email": {
+              "type": "string",
+              "example": "tutu@example.com"
+            }
+          }
+        },
+        "UtilisateurPut" : {
+          "type": "object",
+          "items": {
+            "$ref": "#/components/schemas/Utilisateur"
+          },
+          "properties": {
+            "id": {
+              "type": "integer",
+              "example": 1
+            },
+            "username": {
+              "type": "string",
+              "example": "Tutu"
+            },
+            "email": {
+              "type": "string",
+              "example": "tutu@example.com"
+            }
+          }
+        },
+        "UtilisateurPost": {
+          "type": "object",
+          "items": {
+            "$ref": "#/components/schemas/Utilisateur"
+          },
+          "properties": {
+            "username": {
+              "type": "string",
+              "example": "Titi"
+            },
+            "email": {
+              "type": "string",
+              "example": "titi@example.com"
+            }
+          }
+        },
+        "ErrorResponse": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "integer",
+              "example": 404
+            },
+            "message": {
+              "type": "string",
+              "example": "Données invalides"
+            }
+          }
+        }
+      },
+      "parameters":{
+        "LimitParam": {
+          "name": "limit",
+          "in": "query",
+          "description": "Nombre d'élèments à retourner",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "default": 10
+          }
+        },
+        "OffsetParam": {
+          "name": "offset",
+          "in": "query",
+          "description": "Nombre d'élèments à ignorer en début de liste",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "default": 0
+          }
+        }
+      }
+    }
+  }
